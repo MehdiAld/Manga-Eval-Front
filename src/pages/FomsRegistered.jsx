@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const FomsRegistered = () => {
+  const navigate = useNavigate();
+
   const [newUser, setNewUser] = useState({
     username: "",
     email: "",
@@ -10,19 +12,19 @@ const FomsRegistered = () => {
   });
 
   const createUser = async (e) => {
-    e.preventDefault(); // Empêche le rechargement de la page lors de la soumission du formulaire
+    e.preventDefault();
     try {
       const response = await axios.post(
         `http://localhost:3333/auth/register`,
         newUser
       );
 
-      // Mettre à jour l'état des utilisateurs avec la nouvelle donnée
       setNewUser({
         username: "",
         email: "",
         password: "",
       });
+      navigate("/");
 
       console.log("Utilisateur enregistré :", response.data);
     } catch (error) {

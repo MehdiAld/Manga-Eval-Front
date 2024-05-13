@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import iconArrow from "/src/assets/arrow.png";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import iconArrow from "/src/assets/arrow.png";
 
-const WhriteCritic = () => {
+const WriteCritic = () => {
   const [oneMangas, setOneMangas] = useState([]);
-  const [oneComment, setComment] = useState([]);
   const [criticTitle, setCriticTitle] = useState("");
   const [criticComment, setcriticComment] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { mangaId } = useParams();
+
+  const token = localStorage.getItem("token");
+  const decodedToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
+  const userId = decodedToken ? decodedToken.id : null;
 
   useEffect(() => {
     fetchMangas(mangaId);
@@ -20,29 +23,49 @@ const WhriteCritic = () => {
       .then((res) => res.json())
       .then((data) => {
         setOneMangas(data);
-        setComment(data.critic);
-        console.log(setOneMangas);
-        console.log(setComment);
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la récupération du manga:", error);
       });
   };
 
-  const createCritic = async () => {
+  const createCritic = async (event) => {
+    event.preventDefault();
     if (!criticTitle || !criticComment) {
       setError("Veuillez remplir tous les champs.");
       return;
     }
 
+    if (!mangaId) {
+      console.error("ID du manga manquant");
+      return;
+    }
+
+    if (!userId) {
+      console.error("ID de l'utilisateur manquant");
+      return;
+    }
+
+    console.log("Données de la critique à envoyer à l'API :", {
+      title: criticTitle,
+      comment: criticComment,
+      mangaId: mangaId,
+      userId: userId,
+    });
+
     try {
       const response = await fetch(
-        `http://localhost:3333/critics/${mangaId}/critic`,
+        `http://localhost:3333/critics/add/${userId}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            title: criticTitle, // Utilisation de criticTitle
-            comment: criticComment, // Utilisation de criticComment
+            title: criticTitle,
+            comment: criticComment,
+            mangaId: mangaId,
           }),
         }
       );
@@ -51,15 +74,12 @@ const WhriteCritic = () => {
         throw new Error("Erreur réseau ou côté serveur");
       }
 
-      // Réinitialiser les champs après la création réussie
+      // Réinitialisez les états après la soumission réussie
       setCriticTitle("");
       setcriticComment("");
       setError(null);
 
       navigate(`/mangas/${mangaId}`);
-
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      // Vous pouvez également effectuer d'autres actions si nécessaire
     } catch (error) {
       console.error("Erreur lors de la création de la critique :", error);
       setError("Erreur lors de la création de la critique.");
@@ -69,16 +89,15 @@ const WhriteCritic = () => {
   return (
     <>
       {oneMangas.map((manga) => (
-        <div key={manga.id} className="containeur-form-whrite-critic">
+        <div key={manga.id} className="containeur-form-write-critic">
           <div className="div-image-for-critic">
-            <Link to="/">
+            <Link to={`/mangas/${mangaId}`}>
               <img
                 className="arrow-back"
                 src={iconArrow}
-                alt="picture arrow for back homepage"
+                alt="image de retour à la page précédente"
               />
             </Link>
-
             <div className="image-for-critic">
               <img
                 className="img-poster-critic"
@@ -116,6 +135,21 @@ const WhriteCritic = () => {
                 />
               </div>
 
+              <div className="invisible-input">
+                {mangaId && (
+                  <div>
+                    <label htmlFor="manga-id">ID du manga:</label>
+                    <input
+                      type="text"
+                      id="manga-id"
+                      name="manga-id"
+                      value={mangaId}
+                      disabled
+                    />
+                  </div>
+                )}
+              </div>
+
               <button type="submit" id="btn-sub-publish">
                 Publier
               </button>
@@ -127,4 +161,4 @@ const WhriteCritic = () => {
   );
 };
 
-export default WhriteCritic;
+export default WriteCritic;

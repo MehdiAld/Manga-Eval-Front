@@ -8,9 +8,11 @@ import Manga from "./pages/Manga.jsx";
 import Onemanga from "./pages/Onemanga.jsx";
 import FromsConnect from "./pages/FomsConnect.jsx";
 import FomsRegistered from "./pages/FomsRegistered.jsx";
-import WhriteCritic from "./pages/WhriteCritic.jsx";
+import WriteCritic from "./pages/WriteCritic.jsx";
 import UserCritic from "./pages/UserCritic.jsx";
 import Favory from "./pages/Favory.jsx";
+import ListUser from "./pages/ListUsers.jsx";
+import CreateManga from "./pages/CreateManga.jsx";
 
 const router = createBrowserRouter([
   {
@@ -38,8 +40,8 @@ const router = createBrowserRouter([
         element: <FomsRegistered />,
       },
       {
-        path: "/:mangaId/whrite-critic",
-        element: <WhriteCritic />,
+        path: "/mangas/:mangaId/write",
+        element: <WriteCritic />,
       },
 
       {
@@ -50,9 +52,19 @@ const router = createBrowserRouter([
         path: "/favory",
         element: <Favory />,
       },
+      {
+        path: "/list-users",
+        element: <ListUser />,
+      },
+      {
+        path: "/CreateManga",
+        element: <CreateManga />,
+      },
     ],
   },
 ]);
+
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

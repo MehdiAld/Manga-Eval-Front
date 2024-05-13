@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const FomsConnect = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -23,11 +25,18 @@ const FomsConnect = () => {
         `http://localhost:3333/auth/login`,
         formData
       );
+
+      const { token, isAdmin } = response.data;
+      localStorage.setItem("token", token);
+
+      if (response.data.isAdmin) {
+        navigate("/list-users");
+      } else {
+        navigate("/");
+      }
       console.log("Utilisateur connecté :", response.data);
-      // Rediriger ou effectuer une autre action après la connexion réussie
     } catch (error) {
       console.error("Erreur lors de la connexion :", error);
-      // Gérer les erreurs de connexion
     }
   };
 

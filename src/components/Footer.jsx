@@ -1,9 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <>
-     <div className="footer">
+      <div className="footer">
         <div className="social-network">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/LinkedIn_logo_initials.png/240px-LinkedIn_logo_initials.png"
@@ -44,23 +45,28 @@ const Footer = () => {
             <ul>
               <li>Manga Proposées</li>
               <li>Signaler un bug</li>
-              <li>FAQ</li>
+              <li>
+                <button>FAQ</button>
+              </li>
             </ul>
           </div>
           <div>
             <h3>Me Contacter</h3>
             <ul>
-              <li>mehdibad93100@gmail.com</li>
+              <Link to="/user-critic">
+                <li>mehdibad93100@gmail.com</li>
+              </Link>
               <li>Likedin</li>
               <li>Github</li>
             </ul>
           </div>
         </div>
         <div className="div-fin-footer">
-          <h3>Mentions Légales | Copyright © 2024</h3>
+          <Link to="/CreateManga">
+            <h3>Mentions Légales | Copyright © 2024</h3>
+          </Link>
         </div>
-      </div>  
-     
+      </div>
     </>
   );
 };

@@ -24,41 +24,132 @@ text {
 }
 
 .btn {
-  width: 170px;
-  height: 38px;
-  border: transparent;
-  border-radius: 8px;
+  display: inline-block;
+  padding: 10px 20px;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 5px;
   background-color: var(--color-principal);
   color: white;
+  cursor: pointer;
 }
 
-.btn:hover {
-  background-color: var(--color-principal-hover);
+.table td,
+.table th {
+  color: #000;
+}
+
+/* MODAL */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 600px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  padding-bottom: 15px;
+}
+
+.modal-header:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-image {
+  width: 100px;
+  height: auto;
+  margin-right: 20px;
+  border-radius: 7px;
+}
+
+.modal-title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.modal-title h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.modal-title p {
+  font-size: 18px;
+  color: #666;
+  margin: 0;
 }
 
 /* NAV BAR */
+
 .nav-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: var(--padding-horizontal-mangapage);
   max-width: 100%;
-  height: 60px;
-  color: white;
+  height: 50px;
+  color: black;
+}
+
+.search-container {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 #site-search {
-  height: 28px;
-  width: 45%;
-  border-radius: 15px;
-  border: 1px solid black;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 14px;
+  height: 30px;
+  width: 500px;
+  transition: all 0.3s ease;
+}
+
+#site-search:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 .img-logo {
-  height: 40px;
-  width: 70px;
+  height: 35px;
+  width: 60px;
   transition: transform 0.3s ease;
 }
 
@@ -93,12 +184,12 @@ text {
 .footer {
   background-color: black;
   max-width: 100%;
-  height: 480px;
+  height: 550px;
   padding: var(--padding-horizontal-mangapage);
 }
 
 .social-network {
-  padding-top: 50px;
+  padding-top: 150px;
   display: flex;
   justify-content: center;
   gap: 30px;
@@ -115,7 +206,7 @@ text {
 
 .bottom-footer {
   display: flex;
-  padding-top: 50px;
+  padding-top: 70px;
 }
 
 .bottom-footer > div {
@@ -141,7 +232,7 @@ text {
 .div-fin-footer {
   display: flex;
   justify-content: center;
-  padding-top: 80px;
+  padding-top: 100px;
 }
 
 .div-fin-footer h3 {
@@ -157,17 +248,20 @@ text {
 
 .div-img-background {
   background-image: url("/src/assets/MangaEval-Homepage.png");
-
   width: 100%;
-  height: calc(100vh - 60px);
+  min-height: calc(100vh - 50px);
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
 }
 
 .left-bottom-element {
-  padding-top: 23%;
+  padding-top: 28%;
   padding-left: 5%;
+}
+
+.left-bottom-element button {
+  margin-top: 15px;
 }
 
 @keyframes typing {
@@ -195,48 +289,24 @@ text {
   }
 }
 
-.btn-website {
-  opacity: 0; /* Démarre avec une opacité de 0 */
-  animation: fadeInButton 0s 1.5s forwards,
-    bounceButton 0.5s 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; /* Fait apparaître le bouton après un délai d'une seconde et demie, puis lui donne un effet de rebond */
-}
-
-@keyframes fadeInButton {
-  from {
-    opacity: 0; /* Démarre avec une opacité de 0 */
-  }
-  to {
-    opacity: 1; /* Termine avec une opacité de 1 */
-  }
-}
-
-@keyframes bounceButton {
-  0%,
-  100% {
-    transform: translateY(
-      0
-    ); /* Au début et à la fin de l'animation, pas de translation */
-  }
-  50% {
-    transform: translateY(
-      -10px
-    ); /* Au milieu de l'animation, le bouton est légèrement élevé */
-  }
-}
-
 /* MANGA */
 
 .container-background {
   background-color: black;
   padding: var(--padding-horizontal-mangapage);
+  height: auto;
+  padding-bottom: 100px;
 }
 
 /* MANGA - TEXT */
 
 .container-text h1 {
-  padding-top: 2%;
+  padding-top: 4%;
   margin: 0px 0px 0px 0px;
+  font-size: 30px;
+  font-weight: 700;
 }
+
 .text-categorys {
   padding-bottom: 1%;
   letter-spacing: 1px;
@@ -247,52 +317,22 @@ text {
   font-size: 15px;
   letter-spacing: 1px;
   padding-bottom: 5%;
+  padding-top: 2%;
+  font-weight: 500;
 }
 
 /* MANGA - CARD */
 
 .container-card {
   background-color: black;
-  height: 1200px;
+  height: auto;
   flex-wrap: wrap;
   display: flex;
   justify-content: space-between;
-  gap: 15px;
 }
 
-.container-card img {
-  height: 430px;
-  width: 220px;
-  border-radius: 15px;
-}
-
-.container-card a {
-  color: #ededef;
-  text-decoration: none;
-  transition: transform 0.3s ease;
-}
-
-.container-card h5 {
-  margin-top: 10px;
-  font-size: 18px;
-}
-
-.container-card p {
-  opacity: 0.8;
-  margin-top: -20px;
-  font-size: 14px;
-}
-
-.container-card a:hover {
-  transform: scale(1.2);
-}
-
-.container-card h5:hover {
-  opacity: 0.8;
-}
-
-.container-card p:hover {
-  opacity: 2;
+.image-container:hover {
+  filter: brightness(70%);
 }
 
 /* ONEMANGA - TOP*/
@@ -300,78 +340,74 @@ text {
 .div-top {
   color: black;
   display: flex;
-  height: 250px;
+  height: 225px;
 }
 
 .div-img-onemanga-background {
   width: 100%;
-  position: relative;
-  /* -webkit-filter: brightness(50%); */
 }
 
-.content-wrapper {
+.div-text-critic {
   display: flex;
-  align-items: center;
-  position: relative;
+  justify-content: space-between;
+  margin-right: 3%;
 }
 
-.image-section {
-  width: 250px;
-  height: 250px;
-  border-radius: 15px;
-  position: relative;
-  top: 50px;
-  left: 66px;
+.write-one-critic {
+  color: var(--color-principal);
 }
+
 .manga-info {
-  margin-left: 30%;
-  color: white;
-  position: absolute;
-  top: 0;
-  bottom: 0;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
+  margin-left: 7%;
+  margin-right: 3%;
+  color: #000;
+  font-weight: bold;
+  font-weight: 700;
+  font-size: 26px;
+  padding-top: 2%;
 }
 
 /* ONE MANGA - DIV COMMENT */
-
-.card-comment {
-  padding-left: 30px;
-  width: 100%;
-  height: 200px;
-  border-radius: 1%;
-  background-color: white;
-  color: black;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+.img-logo-from-onemana {
+  height: 55px;
+  width: 90px;
+  border-radius: 2px;
+  transition: transform 0.3s ease;
 }
 
-.card-comment h3 {
-  padding-top: 25px;
-  width: 70%;
+.img-logo-from-onemana:hover {
+  transform: scale(1.2);
 }
 
-.card-comment p {
-  width: 95%;
+.from-onemanga {
+  padding-bottom: 70px;
 }
 
-.FavAndComment {
-  display: flex;
-  margin-left: 90%;
-  gap: 5px;
+.title-manga-critic {
+  font-weight: 700;
+  font-weight: bold;
 }
 
-.FavAndComment img {
-  width: 20px;
-  height: 20px;
+.text-critic-manga-title {
+  font-weight: 700;
+  font-weight: bold;
+  padding-bottom: 5px;
+  font-style: italic;
+}
+
+.btn-heart-in-comment {
+  margin-left: 70%;
+  margin-top: 5%;
 }
 
 /* WHRITE */
 
-.containeur-whrite {
+.containeur-write {
   display: flex;
-  background-color: #ededef;
-  height: 60px;
+  background-color: white;
+  height: 160px;
   color: black;
   width: 100%;
   padding-top: 5%;
@@ -396,11 +432,11 @@ text {
   font-weight: bold;
 }
 
-.whrite-critic {
+.write-critic {
   width: 20%;
 }
 
-.whrite-critic p {
+.write-critic p {
   margin-left: 20%;
   color: var(--color-principal);
 }
@@ -410,22 +446,21 @@ a {
 }
 
 .div-line {
-  margin-top: -30px;
-  background-color: #ededef;
-
-  height: auto;
+  margin-top: -70px;
+  margin-bottom: 20px;
   padding-left: 25%;
+  height: auto;
 }
 
 .line {
-  height: 2px;
+  height: 1px;
   width: 100%;
 }
 
 /* BELLOW  */
 
 .below-text {
-  background-color: #ededef;
+  background-color: white;
   display: flex;
   position: relative;
   height: auto;
@@ -471,14 +506,15 @@ a {
 /* FORMS */
 
 /* OUTSIDE - FORMS */
-.img-background-register {
+
+/* .img-background-register {
   background-image: url("/src/assets/luffy-g2.jpg");
   width: 100%;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% auto;
-}
+} */
 
 .div-box-register {
   height: 50px;
@@ -495,7 +531,7 @@ a {
   font-size: 20px;
   font-weight: 500;
   text-align: center;
-  margin-top: -80px;
+  margin-top: -100px;
   margin-bottom: 60px;
 }
 
@@ -511,7 +547,7 @@ a {
 }
 
 form {
-  height: 60%;
+  height: 100%;
   width: 20%;
   padding: 150px 20px 20px;
   background-color: #f9f9f9;
@@ -568,19 +604,27 @@ button[type="submit"]:hover {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  gap: 10px;
 }
 
 .problems button {
   color: white;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 10px;
+}
+
+.contact-me {
+  font-weight: 500;
 }
 
 .contact-me:hover {
   color: var(--color-principal);
 }
 
-/* WHRITE CRITIC */
+/* WRITE CRITIC */
 
-.containeur-form-whrite-critic {
+.containeur-form-write-critic {
   display: flex;
   height: 100vh;
   overflow: hidden;
@@ -637,6 +681,8 @@ button[type="submit"]:hover {
 
 .title-critic-page {
   margin-top: -50px;
+  font-size: 30px;
+  font-weight: 700;
 }
 
 #title-critic {
@@ -650,6 +696,13 @@ button[type="submit"]:hover {
 
 #btn-sub-publish {
   width: 20%;
+}
+
+input[type="title-critic"] {
+  height: 30px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 /* USER CRITIC */
@@ -696,31 +749,51 @@ button[type="submit"]:hover {
 .div-user-critic {
   width: 23%;
   overflow-wrap: break-word;
+  column-gap: 150px;
+  padding: 10px 10px;
+}
+
+.div-user-critic h3 {
+  padding-bottom: 15px;
+  font-style: italic;
 }
 
 .div-user-critic p {
-  width: 80%;
+  width: 90%;
   max-height: 100px;
   overflow: hidden;
+  font-style: italic;
 }
 
 /* FAVORY */
 
 .containeur-favory {
-  background-color: magenta;
+  color: black;
+}
+
+.div-top-fav {
+  background-image: url("/src/assets/citypop.jpg");
+  background-size: cover;
 }
 
 .img-user-background {
   width: 100%;
   position: relative;
-  background-image: url("/src/assets/img-pay.jpg");
 }
 
 .img-user-logo {
-  width: 250px;
-  height: 250px;
-  border-radius: 15px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
   position: relative;
   top: 50px;
   left: 66px;
+}
+
+.div-userlike-top {
+  padding-top: 100px;
+}
+
+.invisible-input {
+  display: none;
 }

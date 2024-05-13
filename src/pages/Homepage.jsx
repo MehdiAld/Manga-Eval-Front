@@ -1,11 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
+// import Navbar from "../components/Navbar";
+import NavbarModal from "../components/NavbarModal";
 
 const HomePage = () => {
   return (
     <>
-      <Navbar />
+      <NavbarModal />
       <div className="container">
         <div className="div-img-background">
           <div className="left-bottom-element">
@@ -15,7 +16,9 @@ const HomePage = () => {
               de l'univers de l'animation japonaise ✍
             </h3>
             <Link to="/mangas">
-              <button className="btn btn-website">Les critiques !!! </button>
+              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Les critiques !!!
+              </button>
             </Link>
           </div>
         </div>
