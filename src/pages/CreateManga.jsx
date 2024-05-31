@@ -44,7 +44,16 @@ const CreateManga = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-screen"
+    style={{
+      width: "100%",
+      height: "100vh",
+      backgroundImage: "url('/src/assets/wallpaper-vg.png')",
+      backgroundSize: "100% 100%",
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: "center",
+      position: "relative",
+    }}>
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md p-4 bg-gray-100 rounded-lg"

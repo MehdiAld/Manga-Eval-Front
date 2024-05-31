@@ -34,7 +34,6 @@ const FomsConnect = () => {
       const { token } = response.data;
       localStorage.setItem("token", token);
 
-      
       checkIsAdmin();
 
       console.log("Utilisateur connecté :", response.data);
@@ -68,7 +67,18 @@ const FomsConnect = () => {
   };
 
   return (
-    <div className="img-background-register">
+    <div
+      className="img-background-register"
+      style={{
+        width: "100%",
+        height: "100vh",
+        backgroundImage: "url('/src/assets/wallpaper-vg.png')",
+        backgroundSize: "100% 100%",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        position: "relative",
+      }}
+    >
       <div className="div-box-register">
         {" "}
         <Link to="/">

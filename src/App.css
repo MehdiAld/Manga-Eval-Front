@@ -266,26 +266,26 @@ text {
 
 @keyframes typing {
   from {
-    width: 0; /* Commence avec une largeur de 0, donc aucun texte n'est visible */
+    width: 0;
   }
   to {
-    width: 100%; /* Termine avec une largeur de 100%, donc tout le texte est visible */
+    width: 100%;
   }
 }
 
 .title-web-site,
 .paragraphe-website {
-  overflow: hidden; /* Cache le texte excédentaire */
-  white-space: nowrap; /* Empêche le texte de passer à la ligne */
-  animation: typing 4s steps(40, end); /* Durée de l'animation et nombre d'étapes pour simuler l'écriture */
+  overflow: hidden; 
+  white-space: nowrap; 
+  animation: typing 4s steps(40, end);  
 }
 
 @keyframes fadeIn {
   from {
-    opacity: 0; /* Démarre avec une opacité de 0 */
+    opacity: 0; 
   }
   to {
-    opacity: 1; /* Termine avec une opacité de 1 */
+    opacity: 1; 
   }
 }
 
