@@ -53,11 +53,9 @@ const Footer = () => {
           <div>
             <h3>Me Contacter</h3>
             <ul>
-              <Link to="/user-critic">
-                <li>mehdibad93100@gmail.com</li>
-              </Link>
-              <li>Likedin</li>
-              <li>Github</li>
+              <li>mehdibad93100@gmail.com</li>
+              <li><a href="https://www.linkedin.com/in/mehdi-badi-pro/">Likedin</a></li>
+              <li><a href="">Github</a></li>
             </ul>
           </div>
         </div>

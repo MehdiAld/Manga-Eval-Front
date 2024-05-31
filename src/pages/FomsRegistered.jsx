@@ -64,9 +64,9 @@ const FomsRegistered = () => {
               id="username"
               name="username"
               required
-              value={newUser.username} // Associez la valeur à newUser.username
-              onChange={
-                (e) => setNewUser({ ...newUser, username: e.target.value }) // Mettez à jour newUser.username
+              value={newUser.username}
+              onChange={(e) =>
+                setNewUser({ ...newUser, username: e.target.value })
               }
             />
           </div>
@@ -77,16 +77,18 @@ const FomsRegistered = () => {
               id="email"
               name="email"
               required
-              value={newUser.email} // Associez la valeur à newUser.email
-              onChange={
-                (e) => setNewUser({ ...newUser, email: e.target.value }) // Mettez à jour newUser.email
+              value={newUser.email}
+              onChange={(e) =>
+                setNewUser({ ...newUser, email: e.target.value })
               }
             />
           </div>
           <div>
             <label htmlFor="password">Mot de passe:</label>
             <input
-              type="text"
+              type="password"
+              name="password"
+              id="inputPassword"
               required
               value={newUser.password}
               onChange={(e) =>

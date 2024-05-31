@@ -10,7 +10,6 @@ import FromsConnect from "./pages/FomsConnect.jsx";
 import FomsRegistered from "./pages/FomsRegistered.jsx";
 import WriteCritic from "./pages/WriteCritic.jsx";
 import UserCritic from "./pages/UserCritic.jsx";
-import Favory from "./pages/Favory.jsx";
 import ListUser from "./pages/ListUsers.jsx";
 import CreateManga from "./pages/CreateManga.jsx";
 
@@ -47,10 +46,6 @@ const router = createBrowserRouter([
       {
         path: "/user-critic",
         element: <UserCritic />,
-      },
-      {
-        path: "/favory",
-        element: <Favory />,
       },
       {
         path: "/list-users",

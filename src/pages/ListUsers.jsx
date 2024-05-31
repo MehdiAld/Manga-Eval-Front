@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function ListUser() {
   const [users, setUsers] = useState([]);
@@ -41,8 +41,8 @@ function ListUser() {
         throw new Error("Erreur réseau ou côté serveur");
       }
 
-      fetchUsers(); // Actualiser la liste des utilisateurs après la suppression
-      setShowDeleteModal(false); // Masquer le modèle après la suppression
+      fetchUsers();
+      setShowDeleteModal(false);
     } catch (error) {
       console.error("Erreur lors de la suppression de l'utilisateur :", error);
     }
@@ -50,7 +50,7 @@ function ListUser() {
 
   const handleUpdateUser = async (event) => {
     event.preventDefault();
-    console.log("SelectedUserId:", selectedUserId); // Vérifiez si l'ID de l'utilisateur est correctement extrait
+    console.log("SelectedUserId:", selectedUserId); 
     try {
       const response = await fetch(
         `http://localhost:3333/auth/edit/${selectedUserId}`,
@@ -97,7 +97,13 @@ function ListUser() {
   return (
     <>
       <div className="container mx-auto">
-        <h2 className="text-2xl font-bold mb-4">Users</h2>
+        <h2 className="text-2xl font-bold mb-4 text-black flex items-center">
+          Liste des utilisateurs
+          <Link to="/" className="link-with-img">
+            <img className="img-logo-for-back" src="src/assets/Manga-Eval-custom.jpg" alt="Image" />
+          </Link>
+        </h2>
+
         <div className="overflow-x-auto">
           <table className="table w-full border-collapse border border-gray-300">
             <thead>
@@ -174,7 +180,7 @@ function ListUser() {
         </div>
       )}
 
-      {/* Modal personnalisée */}
+      
       {showCustomModal && (
         <div
           id="custom-modal"

@@ -19,7 +19,7 @@ const CreateManga = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Données du formulaire :", formData); // Affiche les données du formulaire
+    console.log("Données du formulaire :", formData); 
     try {
       const response = await fetch("http://localhost:3333/mangas/add", {
         method: "POST",
@@ -29,8 +29,8 @@ const CreateManga = () => {
         body: JSON.stringify(formData),
       });
       const data = await response.json();
-      console.log("Réponse du serveur après la création :", data); // Affiche la réponse du serveur
-      // Réinitialiser le formulaire après la création réussie
+      console.log("Réponse du serveur après la création :", data); 
+     
       setFormData({
         title: "",
         image: "",
@@ -39,7 +39,7 @@ const CreateManga = () => {
         category: "",
       });
     } catch (error) {
-      console.error("Erreur lors de la création du manga :", error); // Affiche les erreurs s'il y en a
+      console.error("Erreur lors de la création du manga :", error);
     }
   };
 

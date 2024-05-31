@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const FomsConnect = () => {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
+    password: "",
   });
+
+  useEffect(() => {
+    checkIsAdmin();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,33 +31,44 @@ const FomsConnect = () => {
         formData
       );
 
-      const { token, isAdmin } = response.data;
+      const { token } = response.data;
       localStorage.setItem("token", token);
 
-      if (response.data.isAdmin) {
-        navigate("/list-users");
-      } else {
-        navigate("/");
-      }
+      
+      checkIsAdmin();
+
       console.log("Utilisateur connecté :", response.data);
+
+      console.log("Redirection vers :", isAdmin ? "/list-users" : "/");
+      setTimeout(() => {
+        navigate(isAdmin ? "/list-users" : "/");
+      }, 3000);
     } catch (error) {
       console.error("Erreur lors de la connexion :", error);
     }
   };
 
+  const checkIsAdmin = () => {
+    const token = localStorage.getItem("token");
+    console.log("Token avant décodage :", token);
+
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        console.log("Token décodé :", decodedToken);
+
+        const isAdmin = decodedToken.isAdmin;
+        console.log("Valeur de isAdmin :", isAdmin);
+
+        setIsAdmin(isAdmin);
+      } catch (error) {
+        console.error("Erreur lors du décodage du token:", error);
+      }
+    }
+  };
+
   return (
-    <div
-      className="img-background-register"
-      style={{
-        width: "100%",
-        height: "100vh",
-        backgroundImage: "url('/src/assets/wallpaper-vg.png')",
-        backgroundSize: "100% 100%",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
-        position: "relative",
-      }}
-    >
+    <div className="img-background-register">
       <div className="div-box-register">
         {" "}
         <Link to="/">

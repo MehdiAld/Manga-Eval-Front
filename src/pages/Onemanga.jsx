@@ -7,11 +7,13 @@ import logo from "/src/assets/Manga-Eval-custom.jpg";
 function Onemanga() {
   const [oneMangas, setOneMangas] = useState([]);
   const [mangaCritics, setMangaCritics] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { mangaId } = useParams();
 
   useEffect(() => {
     fetchMangas(mangaId);
     fetchMangaCritics(mangaId);
+    checkIsAdmin();
   }, [mangaId]);
 
   const fetchMangas = (mangaId) => {
@@ -40,6 +42,41 @@ function Onemanga() {
           error
         );
       });
+  };
+
+  const checkIsAdmin = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        setIsAdmin(decodedToken.isAdmin);
+      } catch (error) {
+        console.error("Erreur lors du décodage du token:", error);
+      }
+    }
+  };
+
+  const handleDeleteCritic = async (criticId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3333/critics/delete/${criticId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erreur réseau ou côté serveur");
+      }
+
+      
+      fetchMangaCritics(mangaId);
+    } catch (error) {
+      console.error("Erreur lors de la suppression de la critique :", error);
+    }
   };
 
   return (
@@ -83,9 +120,14 @@ function Onemanga() {
                 <div className="div-user-critic" key={critic._id}>
                   <h3 className="title-manga-critic">{critic.title}</h3>
                   <p className="p-manga-critic">{critic.comment}</p>
-                  <p>
+                  <p className="date-manga-critic">
                     Créé le : {new Date(critic.created_at).toLocaleString()}
                   </p>
+                  {isAdmin && (
+                    <button onClick={() => handleDeleteCritic(critic._id)}>
+                      <h1 className="btn-delete-critic">❌</h1>
+                    </button>
+                  )}
                 </div>
               ))}
             </div>

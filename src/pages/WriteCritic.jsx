@@ -74,7 +74,7 @@ const WriteCritic = () => {
         throw new Error("Erreur réseau ou côté serveur");
       }
 
-      // Réinitialisez les états après la soumission réussie
+    
       setCriticTitle("");
       setcriticComment("");
       setError(null);
