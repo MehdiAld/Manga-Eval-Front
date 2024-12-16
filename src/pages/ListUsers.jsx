@@ -97,12 +97,14 @@ function ListUser() {
   return (
     <>
       <div className="container mx-auto">
-        <h2 className="text-2xl font-bold mb-4 text-black flex items-center">
-          Liste des utilisateurs
-          <Link to="/" className="link-with-img">
-            <img className="img-logo-for-back" src="src/assets/Manga-Eval-custom.jpg" alt="Image" />
-          </Link>
-        </h2>
+      <h2 className="text-2xl font-bold mb-6 text-black flex items-center justify-between pt-8">
+  Liste des utilisateurs
+  <Link to="/" className="link-with-img">
+    <img className="w-16 h-auto" src="src/assets/Manga-Eval-custom.jpg" alt="Image" />
+  </Link>
+</h2>
+
+
 
         <div className="overflow-x-auto">
           <table className="table w-full border-collapse border border-gray-300">
@@ -149,7 +151,7 @@ function ListUser() {
         </div>
       </div>
 
-      {/* Modal de confirmation de suppression */}
+      
       {showDeleteModal && (
         <div
           id="popup-modal"

@@ -9,9 +9,12 @@ import Onemanga from "./pages/Onemanga.jsx";
 import FromsConnect from "./pages/FomsConnect.jsx";
 import FomsRegistered from "./pages/FomsRegistered.jsx";
 import WriteCritic from "./pages/WriteCritic.jsx";
-import UserCritic from "./pages/UserCritic.jsx";
+import UserProfil from "./pages/UserProfil.jsx";
 import ListUser from "./pages/ListUsers.jsx";
 import CreateManga from "./pages/CreateManga.jsx";
+import Favory from "./pages/Favory.jsx";
+import Explanation from "./pages/Explanation.jsx";
+import LegalNotice from "./pages/LegalNotice.jsx";
 
 const router = createBrowserRouter([
   {
@@ -44,8 +47,8 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "/user-critic",
-        element: <UserCritic />,
+        path: "/profil/:userId",
+        element: <UserProfil />,
       },
       {
         path: "/list-users",
@@ -54,6 +57,18 @@ const router = createBrowserRouter([
       {
         path: "/CreateManga",
         element: <CreateManga />,
+      },
+      {
+        path: "/favory",
+        element: <Favory />,
+      },
+      {
+        path: "/explanation",
+        element: <Explanation />,
+      },
+      {
+        path: "/legalnotice",
+        element: <LegalNotice />,
       },
     ],
   },

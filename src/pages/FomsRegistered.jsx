@@ -1,9 +1,10 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const FomsRegistered = () => {
   const navigate = useNavigate();
+  const formRef = useRef(null);
 
   const [newUser, setNewUser] = useState({
     username: "",
@@ -11,29 +12,56 @@ const FomsRegistered = () => {
     password: "",
   });
 
+  const [errors, setErrors] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
   const createUser = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        `http://localhost:3333/auth/register`,
-        newUser
-      );
+    setErrors({ username: "", email: "", password: "" }); 
 
+    try {
+      const response = await axios.post(`http://localhost:3333/auth/register`, newUser);
       setNewUser({
         username: "",
         email: "",
         password: "",
       });
       navigate("/");
-
       console.log("Utilisateur enregistré :", response.data);
     } catch (error) {
-      console.error(
-        "Erreur lors de l'enregistrement de l'utilisateur :",
-        error
-      );
+      console.error("Erreur lors de l'enregistrement de l'utilisateur :", error);
+      if (error.response && error.response.data && error.response.data.error) {
+       
+        if (error.response.data.error.includes("Nom d'utilisateur déjà pris")) {
+          setErrors((prevErrors) => ({ ...prevErrors, username: "Nom d'utilisateur déjà pris." }));
+        } else if (error.response.data.error.includes("Email déjà associé")) {
+          setErrors((prevErrors) => ({ ...prevErrors, email: "Email déjà associé à un autre compte." }));
+        } else {
+          
+          setErrors((prevErrors) => ({ ...prevErrors, password: "Erreur lors de l'enregistrement." }));
+        }
+      }
     }
   };
+
+ 
+  const handleClickOutside = (e) => {
+    if (formRef.current && !formRef.current.contains(e.target)) {
+      navigate("/"); 
+    }
+  };
+
+  useEffect(() => {
+   
+    document.addEventListener("mousedown", handleClickOutside);
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div
@@ -49,12 +77,13 @@ const FomsRegistered = () => {
       }}
     >
       <div className="div-box-register">
-        {" "}
         <Link to="/">
           <button className="btn btn-register">Retour</button>
         </Link>
       </div>
-      <div className="div-form-register">
+
+     
+      <div className="div-form-register" ref={formRef}>
         <form onSubmit={createUser}>
           <p className="title-siteweb">MangaEval</p>
           <div>
@@ -64,11 +93,12 @@ const FomsRegistered = () => {
               id="username"
               name="username"
               required
-              value={newUser.username} 
-              onChange={
-                (e) => setNewUser({ ...newUser, username: e.target.value }) 
+              value={newUser.username}
+              onChange={(e) =>
+                setNewUser({ ...newUser, username: e.target.value })
               }
             />
+            {errors.username && <p>{errors.username}</p>}
           </div>
           <div>
             <label htmlFor="email">Adresse email:</label>
@@ -77,31 +107,32 @@ const FomsRegistered = () => {
               id="email"
               name="email"
               required
-              value={newUser.email} 
-              onChange={
-                (e) => setNewUser({ ...newUser, email: e.target.value }) 
-              }
+              value={newUser.email}
+              onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
             />
+            {errors.email && <p>{errors.email}</p>}
           </div>
           <div>
             <label htmlFor="password">Mot de passe:</label>
             <input
-               type="password"
-               name="password"
-               id="inputPassword"
+              type="password"
+              name="password"
+              id="inputPassword"
               required
               value={newUser.password}
               onChange={(e) =>
                 setNewUser({ ...newUser, password: e.target.value })
               }
             />
+            {errors.password && <p>{errors.password}</p>}
           </div>
           <button type="submit">S'inscrire</button>
         </form>
       </div>
+
       <div className="problems">
-        <button className="no-btn">Tu rencontre un problèmes ? </button>
-        <button className="contact-me no-btn">contatez-nous</button>
+        <button className="no-btn">Tu rencontre un problème ?</button>
+        <button className="contact-me no-btn">Contactez-nous</button>
       </div>
     </div>
   );

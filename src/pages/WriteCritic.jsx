@@ -29,62 +29,62 @@ const WriteCritic = () => {
       });
   };
 
+  
+  const fetchMangaCritics = (mangaId) => {
+    fetch(`http://localhost:3333/critics/all/${mangaId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Critiques récupérées:", data);
+        
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la récupération des critiques :", error);
+      });
+  };
+
   const createCritic = async (event) => {
     event.preventDefault();
-    if (!criticTitle || !criticComment) {
-      setError("Veuillez remplir tous les champs.");
-      return;
-    }
-
-    if (!mangaId) {
-      console.error("ID du manga manquant");
-      return;
-    }
-
-    if (!userId) {
-      console.error("ID de l'utilisateur manquant");
-      return;
-    }
-
-    console.log("Données de la critique à envoyer à l'API :", {
-      title: criticTitle,
-      comment: criticComment,
-      mangaId: mangaId,
-      userId: userId,
-    });
-
-    try {
-      const response = await fetch(
-        `http://localhost:3333/critics/add/${userId}`,
-        {
+  
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        const userId = decodedToken.id;
+        const username = decodedToken.username;
+  
+        const criticData = {
+          title: criticTitle,
+          comment: criticComment,
+          mangaId: mangaId,
+          userId: userId, 
+          username: username 
+        };
+  
+        const response = await fetch(`http://localhost:3333/critics/add/${userId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`
           },
-          body: JSON.stringify({
-            title: criticTitle,
-            comment: criticComment,
-            mangaId: mangaId,
-          }),
+          body: JSON.stringify(criticData),
+        });
+  
+        if (!response.ok) {
+          throw new Error("Erreur lors de la création de la critique");
         }
-      );
-
-      if (!response.ok) {
-        throw new Error("Erreur réseau ou côté serveur");
+  
+        const data = await response.json();
+        console.log("Critique créée avec succès.", data);
+  
+        
+        navigate(`/mangas/${mangaId}`);
+  
+      } catch (error) {
+        console.error("Erreur lors de la création de la critique :", error);
       }
-
-    
-      setCriticTitle("");
-      setcriticComment("");
-      setError(null);
-
-      navigate(`/mangas/${mangaId}`);
-    } catch (error) {
-      console.error("Erreur lors de la création de la critique :", error);
-      setError("Erreur lors de la création de la critique.");
     }
   };
+  
 
   return (
     <>
@@ -105,7 +105,7 @@ const WriteCritic = () => {
                 alt="Image background du manga"
               />
             </div>
-            <p className="ddd">{manga.title}</p>
+            <p className="title-manga-in-whrite-critic">{manga.title}</p>
           </div>
 
           <div className="create-critic">
@@ -114,10 +114,11 @@ const WriteCritic = () => {
               <div>
                 <label htmlFor="title-critic">Titre de votre critique:</label>
                 <input
-                  type="title-critic"
+                  type="text" 
                   id="title-critic"
                   name="title-critic"
                   required
+                  placeholder="Écrit le titre de ta critique....."
                   value={criticTitle}
                   onChange={(e) => setCriticTitle(e.target.value)}
                 />
@@ -125,13 +126,15 @@ const WriteCritic = () => {
 
               <div>
                 <label htmlFor="comment-critic">Votre critique:</label>
-                <input
-                  type="text"
+                <textarea
                   id="comment-critic"
                   name="comment-critic"
                   required
+                  placeholder="Écrit le commentaire de ta critique....."
                   value={criticComment}
                   onChange={(e) => setcriticComment(e.target.value)}
+                  rows={5} 
+                  className="resize-none" 
                 />
               </div>
 

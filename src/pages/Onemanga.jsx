@@ -9,6 +9,10 @@ function Onemanga() {
   const [mangaCritics, setMangaCritics] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const { mangaId } = useParams();
+  const [favorites, setFavorites] = useState(() => {
+    const savedFavorites = localStorage.getItem("favorites");
+    return savedFavorites ? JSON.parse(savedFavorites) : [];
+  });
 
   useEffect(() => {
     fetchMangas(mangaId);
@@ -23,10 +27,7 @@ function Onemanga() {
         setOneMangas(data);
       })
       .catch((error) => {
-        console.error(
-          "Erreur lors de la récupération des détails du manga:",
-          error
-        );
+        console.error("Erreur lors de la récupération des détails du manga:", error);
       });
   };
 
@@ -37,10 +38,7 @@ function Onemanga() {
         setMangaCritics(data.mangaCritics);
       })
       .catch((error) => {
-        console.error(
-          "Erreur lors de la récupération des critiques du manga:",
-          error
-        );
+        console.error("Erreur lors de la récupération des critiques du manga:", error);
       });
   };
 
@@ -64,6 +62,7 @@ function Onemanga() {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -72,11 +71,75 @@ function Onemanga() {
         throw new Error("Erreur réseau ou côté serveur");
       }
 
-      
       fetchMangaCritics(mangaId);
+      
+      setFavorites((prevFavorites) => {
+        const updatedFavorites = prevFavorites.filter((id) => id !== criticId);
+        localStorage.setItem("favorites", JSON.stringify(updatedFavorites));  
+        return updatedFavorites;
+      });
     } catch (error) {
       console.error("Erreur lors de la suppression de la critique :", error);
     }
+  };
+
+  const toggleFavorite = async (criticId) => {
+    const userId = getUserIdFromToken(); 
+    
+  
+    const isFavorite = favorites.includes(criticId);
+    console.log("Is Favorite (before action):", isFavorite);  
+  
+    try {
+      if (isFavorite) {
+        console.log("Removing from favorites...");
+        const response = await fetch(`http://localhost:3333/critics/${userId}/unlike/${criticId}`, {
+          method: "DELETE",
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP lors de la suppression : ${response.status}`);
+        }
+  
+     
+        setFavorites((prevFavorites) => {
+          const updatedFavorites = prevFavorites.filter((id) => id !== criticId);    
+          localStorage.setItem("favorites", JSON.stringify(updatedFavorites));  
+          return updatedFavorites;
+        });
+      } else {
+        const response = await fetch(`http://localhost:3333/critics/${userId}/like`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ criticId })
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP lors de l'ajout : ${response.status}`);
+        }
+ 
+        setFavorites((prevFavorites) => {
+          const updatedFavorites = [...prevFavorites, criticId];
+          localStorage.setItem("favorites", JSON.stringify(updatedFavorites));  
+          return updatedFavorites;
+        });
+      }
+    } catch (error) {
+      console.error("Erreur dans toggleFavorite :", error);
+    }
+  };
+  
+
+
+  const getUserIdFromToken = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
+      return decodedToken.id;
+    }
+    return null;
   };
 
   return (
@@ -95,10 +158,10 @@ function Onemanga() {
             ></div>
           </div>
           <div className="manga-info">
-            <h3>{manga.title}🖋</h3>
+            <h3 className="title-onemanga">{manga.title}🖋</h3>
             <div>
               <Link to="/">
-                <img className="img-logo-from-onemana" src={logo} alt="logo" />
+                <img className="img-logo-from-onemanga" src={logo} alt="logo" />
               </Link>
             </div>
           </div>
@@ -110,26 +173,66 @@ function Onemanga() {
                   Les critiques de : {manga.title} 🖊
                 </h2>
                 <Link to={`/mangas/${mangaId}/write`}>
-                  <h3 className="write-one-critic">écrire une critique</h3>
+                  <button className="write-critic-button">
+                    écrire une critique
+                  </button>
                 </Link>
               </div>
-              <img src={line} alt="black line" />
+            </div>
+            <div>
+              <img className="line-critic-split" src={line} />
             </div>
             <div className="div-user-critics">
-              {mangaCritics.map((critic) => (
-                <div className="div-user-critic" key={critic._id}>
-                  <h3 className="title-manga-critic">{critic.title}</h3>
-                  <p className="p-manga-critic">{critic.comment}</p>
-                  <p className="date-manga-critic">
-                    Créé le : {new Date(critic.created_at).toLocaleString()}
-                  </p>
-                  {isAdmin && (
-                    <button onClick={() => handleDeleteCritic(critic._id)}>
-                      <h1 className="btn-delete-critic">❌</h1>
+              {mangaCritics.length === 0 ? (
+                <p>Aucune critique disponible.</p>
+              ) : (
+                mangaCritics.map((critic) => (
+                  <div
+                    className="div-user-critic"
+                    key={critic._id}
+                    style={{ position: "relative" }}
+                  >
+                    <h3 className="title-manga-critic">{critic.title}</h3>
+                    <p className="p-manga-critic">{critic.comment}</p>
+                    <p className="date-manga-critic">
+                      Créé le : {new Date(critic.created_at).toLocaleString()}
+                    </p>
+                    <Link to={`/profil/${critic.userId}`}>
+                      <p className="user-manga-critic">
+                        Par : {critic.username || "Utilisateur inconnu"}
+                      </p>
+                    </Link>
+
+                    <button
+                      onClick={() => toggleFavorite(critic._id)}
+                      style={{
+                        position: "absolute",
+                        bottom: "32px",
+                        right: "25px",
+                        background: "transparent",
+                        border: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <img
+                        src={
+                          favorites.includes(critic._id)
+                            ? "/src/assets/icon-heart-actived.png"
+                            : "/src/assets/icon-heart-no-actived.png"
+                        }
+                        alt="Favorite"
+                        style={{ width: "20px", height: "20px" }}
+                      />
                     </button>
-                  )}
-                </div>
-              ))}
+
+                    {isAdmin && (
+                      <button onClick={() => handleDeleteCritic(critic._id)}>
+                        <h1 className="btn-delete-critic">❌</h1>
+                      </button>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>

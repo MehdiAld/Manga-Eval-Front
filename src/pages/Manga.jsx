@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import MangaGallery from "../components/MyGalery";
 import { Link } from "react-router-dom";
+import NavbarMobile from "../components/NavbarMobile";
 
 function Manga() {
   const [mangas, setMangas] = useState([]);
@@ -94,7 +95,7 @@ function Manga() {
   return (
     <>
       <Navbar onSearch={handleSearch} />
-      <div className="container-background">
+      <div className="container-background container-background-mobile">
         <div className="container-text">
           <h1>Les mangas que vous pouvez critiquer</h1>
           <h6 className="text-description">
@@ -106,7 +107,7 @@ function Manga() {
           </h6>
           {isAdmin && (
             <Link to="/CreateManga">
-              <img className="img-for-create-mange-admin" src="src/assets/plus.png" />
+              <img className="img-for-create-manga-admin" src="src/assets/plus.png" />
             </Link>
           )}
         </div>
@@ -119,7 +120,10 @@ function Manga() {
         />
 
         <Footer />
+
+       
       </div>
+      <NavbarMobile />
     </>
   );
 }

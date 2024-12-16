@@ -1,7 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1])); // Décodage du payload JWT
+        setUserId(decodedToken.id);
+      } catch (error) {
+        console.error("Erreur lors du décodage du token :", error);
+        setUserId(null); // Reset en cas d'erreur
+      }
+    }
+  }, []);
+
   return (
     <>
       <div className="footer">
@@ -27,40 +42,82 @@ const Footer = () => {
           <div>
             <h3>MangaEval</h3>
             <ul>
-              <li>Acceuil</li>
-              <li>Nos manga</li>
-              <li>Page utilisateur</li>
+              <Link to="/">
+                <li>Accueil</li>
+              </Link>
+              <Link to="/mangas">
+                <li>Nos mangas</li>
+              </Link>
+              {userId ? (
+                <Link to={`/profil/${userId}`}>
+                  <li>Page utilisateur</li>
+                </Link>
+              ) : (
+                <li>Connectez-vous pour accéder à votre page</li>
+              )}
             </ul>
           </div>
           <div>
             <h3>Catalogues</h3>
             <ul>
-              <li>Shonen</li>
-              <li>Sheinen</li>
-              <li>Science-fiction</li>
+              <Link to="/explanation">
+                <li>Shonen</li>
+              </Link>
+              <Link to="/explanation">
+                <li>Seinen</li>
+              </Link>
+              <Link to="/explanation">
+                <li>Science-fiction</li>
+              </Link>
             </ul>
           </div>
           <div>
             <h3>Liens Pratiques</h3>
             <ul>
-              <li>Manga Proposées</li>
-              <li>Signaler un bug</li>
+              <Link to="/explanation">
+                <li>Manga Proposés</li>
+              </Link>
+              <Link to="/explanation">
+                <li>Signaler un bug</li>
+              </Link>
               <li>
-                <button>FAQ</button>
+                <Link to="/explanation">
+                  <button>FAQ</button>
+                </Link>
               </li>
             </ul>
           </div>
           <div>
             <h3>Me Contacter</h3>
             <ul>
-              <li>mehdibad93100@gmail.com</li>
-              <li><a href="https://www.linkedin.com/in/mehdi-badi-pro/">Likedin</a></li>
-              <li><a href="">Github</a></li>
+              <li>
+                <a href="mailto:roro@gmail.com?subject=Demande%20d'information&body=Bonjour,%20je%20voudrais%20en%20savoir%20plus%20sur%20votre%20site.">
+                  Envoyer un email
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.linkedin.com/in/mehdi-badi-pro/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  LinkedIn
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/MehdiAld"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Github
+                </a>
+              </li>
             </ul>
           </div>
         </div>
         <div className="div-fin-footer">
-          <Link to="/CreateManga">
+          <Link to="/legalnotice">
             <h3>Mentions Légales | Copyright © 2024</h3>
           </Link>
         </div>

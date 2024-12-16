@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 
 const CreateManga = () => {
   const [formData, setFormData] = useState({
@@ -9,9 +8,6 @@ const CreateManga = () => {
     imagesection: "",
     category: "",
   });
-
-  const navigate = useNavigate(); 
-  const formRef = useRef(null); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,7 +31,6 @@ const CreateManga = () => {
       const data = await response.json();
       console.log("Réponse du serveur après la création :", data); 
      
-      
       setFormData({
         title: "",
         image: "",
@@ -43,31 +38,10 @@ const CreateManga = () => {
         imagesection: "",
         category: "",
       });
-
-      
-      navigate("/mangas"); 
     } catch (error) {
       console.error("Erreur lors de la création du manga :", error);
     }
   };
-
-  
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      
-      if (formRef.current && !formRef.current.contains(event.target)) {
-        navigate("/mangas"); 
-      }
-    };
-
-    
-    document.addEventListener("mousedown", handleClickOutside);
-
-   
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [navigate]);
 
   return (
     <div className="flex justify-center items-center h-screen"
@@ -81,7 +55,6 @@ const CreateManga = () => {
       position: "relative",
     }}>
       <form
-        ref={formRef} 
         onSubmit={handleSubmit}
         className="w-full max-w-md p-4 bg-gray-100 rounded-lg"
         style={{ height: "80vh" }}
@@ -136,7 +109,7 @@ const CreateManga = () => {
           <input
             type="text"
             name="category"
-            value={formData.category}    
+            value={formData.category}
             onChange={handleChange}
             className="form-input mt-1 block w-full text-sm"
             required

@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const MangaGallery = ({ mangas, onDelete, onEdit, isAdmin }) => {
-  console.log("isAdmin:", isAdmin);
-
   const [hoveredManga, setHoveredManga] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedManga, setSelectedManga] = useState(null);
   const [formData, setFormData] = useState({
@@ -14,6 +13,13 @@ const MangaGallery = ({ mangas, onDelete, onEdit, isAdmin }) => {
     imagesection: "",
     category: "",
   });
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", checkMobile);
+    checkMobile();
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const openModal = (manga) => {
     setSelectedManga(manga);
@@ -63,6 +69,7 @@ const MangaGallery = ({ mangas, onDelete, onEdit, isAdmin }) => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              flexDirection: "column",
             }}
           >
             <Link to={`/mangas/${manga._id}`} className="image-container">
@@ -70,64 +77,81 @@ const MangaGallery = ({ mangas, onDelete, onEdit, isAdmin }) => {
                 className="max-w-full max-h-full rounded-lg"
                 src={manga.image}
                 alt="manga image"
+                style={{ display: "block", marginBottom: "0" }}
               />
-              {hoveredManga === manga && (
-                <div
-                  className="text-overlay"
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: "5px",
-                    boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-                  }}
-                >
-                  <div className="scroll-text">{manga.title}</div>
-                  <div className="scroll-text" style={{ marginTop: "5px" }}>
-                    {manga.category}
-                  </div>
-                </div>
-              )}
             </Link>
-            {hoveredManga === manga && isAdmin && (
+
+            {/* Affichage du nom et catégorie lors du survol (PC) */}
+            {hoveredManga === manga && !isMobile && (
               <div
-                className="buttons-container"
-                style={{ position: "absolute", bottom: "10px", right: "10px" }}
+                className="text-overlay"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  textAlign: "center",
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                }}
               >
-                <button
-                  className="icon-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openModal(manga);
-                  }}
-                >
-                  <img
-                    src="/src/assets/crayon.png"
-                    alt="Edit"
-                    style={{ width: "16px", height: "16px" }}
-                  />
-                </button>
-                <button
-                  className="icon-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDelete(manga._id);
-                  }}
-                >
-                  <img
-                    src="/src/assets/croix.png"
-                    alt="Delete"
-                    style={{ width: "16px", height: "16px" }}
-                  />
-                </button>
+                <div>{manga.title}</div>
+                <div>{manga.category}</div>
               </div>
             )}
+
+            {/* Affichage des boutons */}
+{(isMobile || hoveredManga === manga) && isAdmin && (
+  <div
+    className="buttons-container"
+    style={{
+      position: isMobile ? "static" : "absolute", // Si mobile, on ne met pas de position absolue
+      bottom: isMobile ? "10px" : "10px", // Si mobile, ils seront en bas sous l'image
+      right: isMobile ? "0" : "10px", // Si mobile, on n'utilise pas 'right' pour les centrer
+      left: isMobile ? "0" : undefined, // Pour PC, on place à droite, sur mobile, on le centre
+      display: "flex",
+      justifyContent: isMobile ? "center" : "flex-end", // Si mobile, centré en bas
+      gap: "10px",
+    }}
+  >
+    <button
+      className="icon-button"
+      onClick={(e) => {
+        e.stopPropagation();
+        openModal(manga);
+      }}
+      style={{
+        width: "36px",
+        height: "36px",
+      }}
+    >
+      <img
+        src="/src/assets/crayon.png"
+        alt="Edit"
+        style={{ width: "16px", height: "16px" }}
+      />
+    </button>
+    <button
+      className="icon-button"
+      onClick={(e) => {
+        e.stopPropagation();
+        onDelete(manga._id);
+      }}
+      style={{
+        width: "36px",
+        height: "36px",
+      }}
+    >
+      <img
+        src="/src/assets/croix.png"
+        alt="Delete"
+        style={{ width: "16px", height: "16px" }}
+      />
+    </button>
+  </div>
+)}
+
           </div>
         ))}
       </div>

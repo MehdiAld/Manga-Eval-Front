@@ -1,19 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from 'react-toastify'; 
 
 const FomsConnect = () => {
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(false);
-
+  const formRef = useRef(null);
+  const [isAdmin, setIsAdmin] = useState(null);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   useEffect(() => {
-    checkIsAdmin();
-  }, []);
+    if (isAdmin !== null) {
+      navigate(isAdmin ? "/list-users" : "/");
+    }
+  }, [isAdmin, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,38 +36,42 @@ const FomsConnect = () => {
 
       const { token } = response.data;
       localStorage.setItem("token", token);
+      checkIsAdmin(token);
 
-      checkIsAdmin();
-
-      console.log("Utilisateur connecté :", response.data);
-
-      console.log("Redirection vers :", isAdmin ? "/list-users" : "/");
-      setTimeout(() => {
-        navigate(isAdmin ? "/list-users" : "/");
-      }, 3000);
+      toast.success("Connexion réussie !"); 
     } catch (error) {
       console.error("Erreur lors de la connexion :", error);
+      toast.error("Erreur lors de la connexion. Vérifiez vos identifiants."); 
     }
   };
 
-  const checkIsAdmin = () => {
-    const token = localStorage.getItem("token");
-    console.log("Token avant décodage :", token);
-
+  const checkIsAdmin = (token) => {
     if (token) {
       try {
         const decodedToken = JSON.parse(atob(token.split(".")[1]));
-        console.log("Token décodé :", decodedToken);
-
         const isAdmin = decodedToken.isAdmin;
-        console.log("Valeur de isAdmin :", isAdmin);
-
         setIsAdmin(isAdmin);
       } catch (error) {
-        console.error("Erreur lors du décodage du token:", error);
+        setIsAdmin(false);
       }
     }
   };
+
+  
+  const handleClickOutside = (e) => {
+    if (formRef.current && !formRef.current.contains(e.target)) {
+      navigate("/"); 
+    }
+  };
+
+  useEffect(() => {
+   
+    document.addEventListener("mousedown", handleClickOutside);
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div
@@ -80,12 +87,12 @@ const FomsConnect = () => {
       }}
     >
       <div className="div-box-register">
-        {" "}
         <Link to="/">
           <button className="btn btn-register">Retour</button>
         </Link>
       </div>
-      <div className="div-form-register">
+
+      <div className="div-form-register" ref={formRef}> 
         <form onSubmit={handleSubmit}>
           <p className="title-siteweb title-siteweb2">MangaEval</p>
           <div>
@@ -117,9 +124,10 @@ const FomsConnect = () => {
           </button>
         </form>
       </div>
+
       <div className="problems">
-        <button className="no-btn">Tu rencontre un problèmes ? </button>
-        <button className="contact-me no-btn">contatez-nous</button>
+        <button className="no-btn">Tu rencontre un problème ? </button>
+        <button className="contact-me no-btn">Contactez-nous</button>
       </div>
     </div>
   );

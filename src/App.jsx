@@ -1,5 +1,7 @@
-import { Outlet } from "react-router-dom";
-import "./App.css";
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import './App.css';
+import ToastProvider from './components/ToastProvider';
 
 function App() {
   return (
@@ -7,6 +9,7 @@ function App() {
       <div className="main-content">
         <Outlet />
       </div>
+      <ToastProvider />
     </>
   );
 }
