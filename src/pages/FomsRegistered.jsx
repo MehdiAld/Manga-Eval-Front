@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 const FomsRegistered = () => {
   const navigate = useNavigate();
   const formRef = useRef(null);
@@ -20,10 +21,10 @@ const FomsRegistered = () => {
 
   const createUser = async (e) => {
     e.preventDefault();
-    setErrors({ username: "", email: "", password: "" }); 
+    setErrors({ username: "", email: "", password: "" });
 
     try {
-      const response = await axios.post(`http://localhost:3333/auth/register`, newUser);
+      const response = await axios.post(`${backendUrl}/auth/register`, newUser);
       setNewUser({
         username: "",
         email: "",
@@ -32,32 +33,40 @@ const FomsRegistered = () => {
       navigate("/");
       console.log("Utilisateur enregistré :", response.data);
     } catch (error) {
-      console.error("Erreur lors de l'enregistrement de l'utilisateur :", error);
+      console.error(
+        "Erreur lors de l'enregistrement de l'utilisateur :",
+        error
+      );
       if (error.response && error.response.data && error.response.data.error) {
-       
         if (error.response.data.error.includes("Nom d'utilisateur déjà pris")) {
-          setErrors((prevErrors) => ({ ...prevErrors, username: "Nom d'utilisateur déjà pris." }));
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            username: "Nom d'utilisateur déjà pris.",
+          }));
         } else if (error.response.data.error.includes("Email déjà associé")) {
-          setErrors((prevErrors) => ({ ...prevErrors, email: "Email déjà associé à un autre compte." }));
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            email: "Email déjà associé à un autre compte.",
+          }));
         } else {
-          
-          setErrors((prevErrors) => ({ ...prevErrors, password: "Erreur lors de l'enregistrement." }));
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            password: "Erreur lors de l'enregistrement.",
+          }));
         }
       }
     }
   };
 
- 
   const handleClickOutside = (e) => {
     if (formRef.current && !formRef.current.contains(e.target)) {
-      navigate("/"); 
+      navigate("/");
     }
   };
 
   useEffect(() => {
-   
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -82,7 +91,6 @@ const FomsRegistered = () => {
         </Link>
       </div>
 
-     
       <div className="div-form-register" ref={formRef}>
         <form onSubmit={createUser}>
           <p className="title-siteweb">MangaEval</p>
@@ -108,7 +116,9 @@ const FomsRegistered = () => {
               name="email"
               required
               value={newUser.email}
-              onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+              onChange={(e) =>
+                setNewUser({ ...newUser, email: e.target.value })
+              }
             />
             {errors.email && <p>{errors.email}</p>}
           </div>

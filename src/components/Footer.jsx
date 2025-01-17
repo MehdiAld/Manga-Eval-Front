@@ -8,11 +8,11 @@ const Footer = () => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decodedToken = JSON.parse(atob(token.split(".")[1])); // Décodage du payload JWT
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
         setUserId(decodedToken.id);
       } catch (error) {
         console.error("Erreur lors du décodage du token :", error);
-        setUserId(null); // Reset en cas d'erreur
+        setUserId(null);
       }
     }
   }, []);

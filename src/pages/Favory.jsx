@@ -6,6 +6,8 @@ import userLogo from "/src/assets/default-icon.jpg";
 import ImageModal from "../components/ImageModel";
 import BannerModal from "../components/BannerModal";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const Favory = () => {
   const [likedCritics, setLikedCritics] = useState([]);
   const [error, setError] = useState(null);
@@ -36,9 +38,7 @@ const Favory = () => {
   const fetchLikedCritics = async () => {
     if (!userId) return;
     try {
-      const response = await fetch(
-        `http://localhost:3333/critics/${userId}/liked`
-      );
+      const response = await fetch(`${backendUrl}/critics/${userId}/liked`);
       if (!response.ok) {
         throw new Error(`Erreur HTTP : ${response.status}`);
       }
@@ -46,7 +46,7 @@ const Favory = () => {
       setLikedCritics(data);
 
       setFavorites(data.map((critic) => critic._id));
-      // Mise à jour de localStorage
+
       localStorage.setItem("likedCritics", JSON.stringify(data));
     } catch (error) {
       console.error(
@@ -62,7 +62,7 @@ const Favory = () => {
   const fetchUserProfile = async () => {
     if (!userId) return;
     try {
-      const response = await fetch(`http://localhost:3333/auth/user/${userId}`);
+      const response = await fetch(`${backendUrl}/auth/user/${userId}`);
       if (!response.ok) {
         throw new Error(
           "Erreur lors de la récupération des données de l'utilisateur."
@@ -81,7 +81,7 @@ const Favory = () => {
   const saveProfilePicture = async (profilePictureSrc) => {
     try {
       const response = await fetch(
-        `http://localhost:3333/auth/${userId}/updateProfile`,
+        `${backendUrl}/auth/${userId}/updateProfile`,
         {
           method: "PUT",
           headers: {
@@ -104,7 +104,7 @@ const Favory = () => {
   const saveBanner = async (bannerSrc) => {
     try {
       const response = await fetch(
-        `http://localhost:3333/auth/${userId}/updateBanner`,
+        `${backendUrl}/auth/${userId}/updateBanner`,
         {
           method: "PUT",
           headers: {
@@ -126,7 +126,7 @@ const Favory = () => {
   const deleteLikedCritic = async (criticId) => {
     try {
       const response = await fetch(
-        `http://localhost:3333/critics/${userId}/unlike/${criticId}`,
+        `${backendUrl}/critics/${userId}/unlike/${criticId}`,
         {
           method: "DELETE",
         }

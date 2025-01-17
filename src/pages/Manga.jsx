@@ -5,6 +5,8 @@ import MangaGallery from "../components/MyGalery";
 import { Link } from "react-router-dom";
 import NavbarMobile from "../components/NavbarMobile";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 function Manga() {
   const [mangas, setMangas] = useState([]);
   const [filteredMangas, setFilteredMangas] = useState([]);
@@ -16,7 +18,7 @@ function Manga() {
   }, []);
 
   const fetchMangas = () => {
-    fetch("http://localhost:3333/mangas/all")
+    fetch(`${backendUrl}/mangas/all`)
       .then((res) => res.json())
       .then((data) => {
         setMangas(data);
@@ -49,15 +51,12 @@ function Manga() {
 
   const handleDelete = async (mangaId) => {
     try {
-      const response = await fetch(
-        `http://localhost:3333/mangas/delete/${mangaId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${backendUrl}/mangas/delete/${mangaId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Erreur réseau ou côté serveur");
@@ -71,16 +70,13 @@ function Manga() {
 
   const handleEdit = async (mangaId, newData) => {
     try {
-      const response = await fetch(
-        `http://localhost:3333/mangas/edit/${mangaId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newData),
-        }
-      );
+      const response = await fetch(`${backendUrl}/mangas/edit/${mangaId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newData),
+      });
 
       if (!response.ok) {
         throw new Error("Erreur réseau ou côté serveur");
@@ -103,11 +99,13 @@ function Manga() {
             classiques bien établis aux nouvelles séries captivantes. Trouvez
             votre prochaine lecture enrichissante ici. Plongez dans l'univers
             captivant du genre littéraire. 📘
-            
           </h6>
           {isAdmin && (
             <Link to="/CreateManga">
-              <img className="img-for-create-manga-admin" src="src/assets/plus.png" />
+              <img
+                className="img-for-create-manga-admin"
+                src="src/assets/plus.png"
+              />
             </Link>
           )}
         </div>
@@ -120,8 +118,6 @@ function Manga() {
         />
 
         <Footer />
-
-       
       </div>
       <NavbarMobile />
     </>

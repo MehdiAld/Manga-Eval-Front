@@ -81,7 +81,6 @@ const MangaGallery = ({ mangas, onDelete, onEdit, isAdmin }) => {
               />
             </Link>
 
-            {/* Affichage du nom et catégorie lors du survol (PC) */}
             {hoveredManga === manga && !isMobile && (
               <div
                 className="text-overlay"
@@ -101,57 +100,55 @@ const MangaGallery = ({ mangas, onDelete, onEdit, isAdmin }) => {
               </div>
             )}
 
-            {/* Affichage des boutons */}
-{(isMobile || hoveredManga === manga) && isAdmin && (
-  <div
-    className="buttons-container"
-    style={{
-      position: isMobile ? "static" : "absolute", // Si mobile, on ne met pas de position absolue
-      bottom: isMobile ? "10px" : "10px", // Si mobile, ils seront en bas sous l'image
-      right: isMobile ? "0" : "10px", // Si mobile, on n'utilise pas 'right' pour les centrer
-      left: isMobile ? "0" : undefined, // Pour PC, on place à droite, sur mobile, on le centre
-      display: "flex",
-      justifyContent: isMobile ? "center" : "flex-end", // Si mobile, centré en bas
-      gap: "10px",
-    }}
-  >
-    <button
-      className="icon-button"
-      onClick={(e) => {
-        e.stopPropagation();
-        openModal(manga);
-      }}
-      style={{
-        width: "36px",
-        height: "36px",
-      }}
-    >
-      <img
-        src="/src/assets/crayon.png"
-        alt="Edit"
-        style={{ width: "16px", height: "16px" }}
-      />
-    </button>
-    <button
-      className="icon-button"
-      onClick={(e) => {
-        e.stopPropagation();
-        onDelete(manga._id);
-      }}
-      style={{
-        width: "36px",
-        height: "36px",
-      }}
-    >
-      <img
-        src="/src/assets/croix.png"
-        alt="Delete"
-        style={{ width: "16px", height: "16px" }}
-      />
-    </button>
-  </div>
-)}
-
+            {(isMobile || hoveredManga === manga) && isAdmin && (
+              <div
+                className="buttons-container"
+                style={{
+                  position: isMobile ? "static" : "absolute",
+                  bottom: isMobile ? "10px" : "10px",
+                  right: isMobile ? "0" : "10px",
+                  left: isMobile ? "0" : undefined,
+                  display: "flex",
+                  justifyContent: isMobile ? "center" : "flex-end",
+                  gap: "10px",
+                }}
+              >
+                <button
+                  className="icon-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openModal(manga);
+                  }}
+                  style={{
+                    width: "36px",
+                    height: "36px",
+                  }}
+                >
+                  <img
+                    src="/src/assets/crayon.png"
+                    alt="Edit"
+                    style={{ width: "16px", height: "16px" }}
+                  />
+                </button>
+                <button
+                  className="icon-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(manga._id);
+                  }}
+                  style={{
+                    width: "36px",
+                    height: "36px",
+                  }}
+                >
+                  <img
+                    src="/src/assets/croix.png"
+                    alt="Delete"
+                    style={{ width: "16px", height: "16px" }}
+                  />
+                </button>
+              </div>
+            )}
           </div>
         ))}
       </div>

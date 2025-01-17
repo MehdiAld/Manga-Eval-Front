@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 function ListUser() {
   const [users, setUsers] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -14,7 +16,7 @@ function ListUser() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch("http://localhost:3333/auth/all");
+      const response = await fetch(`${backendUrl}/auth/all`);
       if (!response.ok) {
         throw new Error("Erreur réseau ou côté serveur");
       }
@@ -27,15 +29,12 @@ function ListUser() {
 
   const deleteUser = async (userId) => {
     try {
-      const response = await fetch(
-        `http://localhost:3333/auth/delete/${userId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${backendUrl}/auth/delete/${userId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Erreur réseau ou côté serveur");
@@ -50,10 +49,10 @@ function ListUser() {
 
   const handleUpdateUser = async (event) => {
     event.preventDefault();
-    console.log("SelectedUserId:", selectedUserId); 
+    console.log("SelectedUserId:", selectedUserId);
     try {
       const response = await fetch(
-        `http://localhost:3333/auth/edit/${selectedUserId}`,
+        `${backendUrl}/auth/edit/${selectedUserId}`,
         {
           method: "PUT",
           headers: {
@@ -97,14 +96,16 @@ function ListUser() {
   return (
     <>
       <div className="container mx-auto">
-      <h2 className="text-2xl font-bold mb-6 text-black flex items-center justify-between pt-8">
-  Liste des utilisateurs
-  <Link to="/" className="link-with-img">
-    <img className="w-16 h-auto" src="src/assets/Manga-Eval-custom.jpg" alt="Image" />
-  </Link>
-</h2>
-
-
+        <h2 className="text-2xl font-bold mb-6 text-black flex items-center justify-between pt-8">
+          Liste des utilisateurs
+          <Link to="/" className="link-with-img">
+            <img
+              className="w-16 h-auto"
+              src="src/assets/Manga-Eval-custom.jpg"
+              alt="Image"
+            />
+          </Link>
+        </h2>
 
         <div className="overflow-x-auto">
           <table className="table w-full border-collapse border border-gray-300">
@@ -151,7 +152,6 @@ function ListUser() {
         </div>
       </div>
 
-      
       {showDeleteModal && (
         <div
           id="popup-modal"
@@ -182,7 +182,6 @@ function ListUser() {
         </div>
       )}
 
-      
       {showCustomModal && (
         <div
           id="custom-modal"

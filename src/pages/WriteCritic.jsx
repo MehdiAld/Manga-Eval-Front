@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import iconArrow from "/src/assets/arrow.png";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const WriteCritic = () => {
   const [oneMangas, setOneMangas] = useState([]);
   const [criticTitle, setCriticTitle] = useState("");
@@ -19,7 +21,7 @@ const WriteCritic = () => {
   }, [mangaId]);
 
   const fetchMangas = (mangaId) => {
-    fetch(`http://localhost:3333/mangas/${mangaId}`)
+    fetch(`${backendUrl}/mangas/${mangaId}`)
       .then((res) => res.json())
       .then((data) => {
         setOneMangas(data);
@@ -29,13 +31,11 @@ const WriteCritic = () => {
       });
   };
 
-  
   const fetchMangaCritics = (mangaId) => {
-    fetch(`http://localhost:3333/critics/all/${mangaId}`)
+    fetch(`${backendUrl}/critics/all/${mangaId}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("Critiques récupérées:", data);
-        
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération des critiques :", error);
@@ -44,47 +44,44 @@ const WriteCritic = () => {
 
   const createCritic = async (event) => {
     event.preventDefault();
-  
+
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decodedToken = JSON.parse(atob(token.split(".")[1]));
         const userId = decodedToken.id;
         const username = decodedToken.username;
-  
+
         const criticData = {
           title: criticTitle,
           comment: criticComment,
           mangaId: mangaId,
-          userId: userId, 
-          username: username 
+          userId: userId,
+          username: username,
         };
-  
-        const response = await fetch(`http://localhost:3333/critics/add/${userId}`, {
+
+        const response = await fetch(`${backendUrl}/critics/add/${userId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(criticData),
         });
-  
+
         if (!response.ok) {
           throw new Error("Erreur lors de la création de la critique");
         }
-  
+
         const data = await response.json();
         console.log("Critique créée avec succès.", data);
-  
-        
+
         navigate(`/mangas/${mangaId}`);
-  
       } catch (error) {
         console.error("Erreur lors de la création de la critique :", error);
       }
     }
   };
-  
 
   return (
     <>
@@ -114,7 +111,7 @@ const WriteCritic = () => {
               <div>
                 <label htmlFor="title-critic">Titre de votre critique:</label>
                 <input
-                  type="text" 
+                  type="text"
                   id="title-critic"
                   name="title-critic"
                   required
@@ -133,8 +130,8 @@ const WriteCritic = () => {
                   placeholder="Écrit le commentaire de ta critique....."
                   value={criticComment}
                   onChange={(e) => setcriticComment(e.target.value)}
-                  rows={5} 
-                  className="resize-none" 
+                  rows={5}
+                  className="resize-none"
                 />
               </div>
 

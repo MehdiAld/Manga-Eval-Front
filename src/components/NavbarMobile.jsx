@@ -10,9 +10,9 @@ const NavbarMobile = () => {
 
     if (token) {
       try {
-        const decodedToken = JSON.parse(atob(token.split(".")[1])); // Décodage du token JWT
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
         setIsLoggedIn(true);
-        setUserId(decodedToken.id); // Récupère l'ID de l'utilisateur
+        setUserId(decodedToken.id);
       } catch (error) {
         console.error("Erreur lors du décodage du token :", error);
         setIsLoggedIn(false);

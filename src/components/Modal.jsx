@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const Modal = ({ handleCloseModal }) => {
   const [mangas, setMangas] = useState([]);
 
   const fetchMangas = () => {
-    fetch("http://localhost:3333/mangas/all")
+    fetch(`${backendUrl}/mangas/all`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("Mangas récupérés :", data); 
+        console.log("Mangas récupérés :", data);
         setMangas(data);
       });
   };

@@ -4,6 +4,9 @@ import Footer from "../components/Footer";
 import line from "/src/assets/Line3.png";
 import logo from "/src/assets/Manga-Eval-custom.jpg";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+console.log(backendUrl);
+
 function Onemanga() {
   const [oneMangas, setOneMangas] = useState([]);
   const [mangaCritics, setMangaCritics] = useState([]);
@@ -21,24 +24,30 @@ function Onemanga() {
   }, [mangaId]);
 
   const fetchMangas = (mangaId) => {
-    fetch(`http://localhost:3333/mangas/${mangaId}`)
+    fetch(`${backendUrl}/mangas/${mangaId}`)
       .then((res) => res.json())
       .then((data) => {
         setOneMangas(data);
       })
       .catch((error) => {
-        console.error("Erreur lors de la récupération des détails du manga:", error);
+        console.error(
+          "Erreur lors de la récupération des détails du manga:",
+          error
+        );
       });
   };
 
   const fetchMangaCritics = (mangaId) => {
-    fetch(`http://localhost:3333/critics/all/${mangaId}`)
+    fetch(`${backendUrl}/critics/all/${mangaId}`)
       .then((res) => res.json())
       .then((data) => {
         setMangaCritics(data.mangaCritics);
       })
       .catch((error) => {
-        console.error("Erreur lors de la récupération des critiques du manga:", error);
+        console.error(
+          "Erreur lors de la récupération des critiques du manga:",
+          error
+        );
       });
   };
 
@@ -56,26 +65,23 @@ function Onemanga() {
 
   const handleDeleteCritic = async (criticId) => {
     try {
-      const response = await fetch(
-        `http://localhost:3333/critics/delete/${criticId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await fetch(`${backendUrl}/critics/delete/${criticId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Erreur réseau ou côté serveur");
       }
 
       fetchMangaCritics(mangaId);
-      
+
       setFavorites((prevFavorites) => {
         const updatedFavorites = prevFavorites.filter((id) => id !== criticId);
-        localStorage.setItem("favorites", JSON.stringify(updatedFavorites));  
+        localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
         return updatedFavorites;
       });
     } catch (error) {
@@ -84,45 +90,50 @@ function Onemanga() {
   };
 
   const toggleFavorite = async (criticId) => {
-    const userId = getUserIdFromToken(); 
-    
-  
+    const userId = getUserIdFromToken();
+
     const isFavorite = favorites.includes(criticId);
-    console.log("Is Favorite (before action):", isFavorite);  
-  
+    console.log("Is Favorite (before action):", isFavorite);
+
     try {
       if (isFavorite) {
         console.log("Removing from favorites...");
-        const response = await fetch(`http://localhost:3333/critics/${userId}/unlike/${criticId}`, {
-          method: "DELETE",
-        });
-  
+        const response = await fetch(
+          `${backendUrl}/critics/${userId}/unlike/${criticId}`,
+          {
+            method: "DELETE",
+          }
+        );
+
         if (!response.ok) {
-          throw new Error(`Erreur HTTP lors de la suppression : ${response.status}`);
+          throw new Error(
+            `Erreur HTTP lors de la suppression : ${response.status}`
+          );
         }
-  
-     
+
         setFavorites((prevFavorites) => {
-          const updatedFavorites = prevFavorites.filter((id) => id !== criticId);    
-          localStorage.setItem("favorites", JSON.stringify(updatedFavorites));  
+          const updatedFavorites = prevFavorites.filter(
+            (id) => id !== criticId
+          );
+          localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
           return updatedFavorites;
         });
       } else {
-        const response = await fetch(`http://localhost:3333/critics/${userId}/like`, {
+        const response = await fetch(`${backendUrl}/critics/${userId}/like`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ criticId })
+          body: JSON.stringify({ criticId }),
         });
-  
+
         if (!response.ok) {
           throw new Error(`Erreur HTTP lors de l'ajout : ${response.status}`);
         }
- 
+
         setFavorites((prevFavorites) => {
           const updatedFavorites = [...prevFavorites, criticId];
-          localStorage.setItem("favorites", JSON.stringify(updatedFavorites));  
+          localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
           return updatedFavorites;
         });
       }
@@ -130,8 +141,6 @@ function Onemanga() {
       console.error("Erreur dans toggleFavorite :", error);
     }
   };
-  
-
 
   const getUserIdFromToken = () => {
     const token = localStorage.getItem("token");

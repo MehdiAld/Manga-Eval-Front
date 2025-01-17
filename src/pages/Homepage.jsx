@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route, Link, useParams, Navigate, useNavigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Link,
+  useParams,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import NavbarModal from "../components/NavbarModal";
 import backgroundImage from "/src/assets/MangaEval-Homepage.png";
 
 const UserProfile = () => {
-  const { userId } = useParams();  
+  const { userId } = useParams();
   const navigate = useNavigate();
 
   if (!userId) {
@@ -24,10 +31,10 @@ const HomePageContent = ({ isLoggedIn, userId }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 480); // Détecte si on est sur mobile (<480px)
+      setIsMobile(window.innerWidth < 480);
     };
 
-    handleResize(); // Exécuter une fois à l'initialisation
+    handleResize();
     window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
@@ -35,9 +42,11 @@ const HomePageContent = ({ isLoggedIn, userId }) => {
 
   return (
     <>
-      {!isMobile && <NavbarModal />} {/* Masque la navbar sur mobile */}
+      {!isMobile && <NavbarModal />}
       <div
-        className={`div-img-background ${isMobile ? "min-h-[100vh]" : "min-h-[90vh]"} flex flex-col justify-center items-center relative`}
+        className={`div-img-background ${
+          isMobile ? "min-h-[100vh]" : "min-h-[90vh]"
+        } flex flex-col justify-center items-center relative`}
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: "cover",
@@ -108,7 +117,10 @@ const HomePage = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<HomePageContent isLoggedIn={isLoggedIn} userId={userId} />} />
+        <Route
+          path="/"
+          element={<HomePageContent isLoggedIn={isLoggedIn} userId={userId} />}
+        />
         <Route path="profil/:userId" element={<UserProfile />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

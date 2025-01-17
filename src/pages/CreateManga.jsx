@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const CreateManga = () => {
   const [formData, setFormData] = useState({
     title: "",
@@ -10,8 +12,8 @@ const CreateManga = () => {
     category: "",
   });
 
-  const navigate = useNavigate(); 
-  const formRef = useRef(null); 
+  const navigate = useNavigate();
+  const formRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,9 +25,9 @@ const CreateManga = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Données du formulaire :", formData); 
+    console.log("Données du formulaire :", formData);
     try {
-      const response = await fetch("http://localhost:3333/mangas/add", {
+      const response = await fetch(`${backendUrl}/mangas/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,9 +35,8 @@ const CreateManga = () => {
         body: JSON.stringify(formData),
       });
       const data = await response.json();
-      console.log("Réponse du serveur après la création :", data); 
-     
-      
+      console.log("Réponse du serveur après la création :", data);
+
       setFormData({
         title: "",
         image: "",
@@ -44,44 +45,41 @@ const CreateManga = () => {
         category: "",
       });
 
-      
-      navigate("/mangas"); 
+      navigate("/mangas");
     } catch (error) {
       console.error("Erreur lors de la création du manga :", error);
     }
   };
 
-  
   useEffect(() => {
     const handleClickOutside = (event) => {
-      
       if (formRef.current && !formRef.current.contains(event.target)) {
-        navigate("/mangas"); 
+        navigate("/mangas");
       }
     };
 
-    
     document.addEventListener("mousedown", handleClickOutside);
 
-   
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [navigate]);
 
   return (
-    <div className="flex justify-center items-center h-screen"
-    style={{
-      width: "100%",
-      height: "100vh",
-      backgroundImage: "url('/src/assets/wallpaper-vg.png')",
-      backgroundSize: "100% 100%",
-      backgroundRepeat: "no-repeat",
-      backgroundPosition: "center",
-      position: "relative",
-    }}>
+    <div
+      className="flex justify-center items-center h-screen"
+      style={{
+        width: "100%",
+        height: "100vh",
+        backgroundImage: "url('/src/assets/wallpaper-vg.png')",
+        backgroundSize: "100% 100%",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        position: "relative",
+      }}
+    >
       <form
-        ref={formRef} 
+        ref={formRef}
         onSubmit={handleSubmit}
         className="w-full max-w-md p-4 bg-gray-100 rounded-lg"
         style={{ height: "80vh" }}
@@ -136,7 +134,7 @@ const CreateManga = () => {
           <input
             type="text"
             name="category"
-            value={formData.category}    
+            value={formData.category}
             onChange={handleChange}
             className="form-input mt-1 block w-full text-sm"
             required
