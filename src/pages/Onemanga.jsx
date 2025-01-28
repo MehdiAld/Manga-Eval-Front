@@ -4,6 +4,9 @@ import Footer from "../components/Footer";
 import line from "/src/assets/Line3.png";
 import logo from "/src/assets/Manga-Eval-custom.jpg";
 
+import heartActive from "/src/assets/icon-heart-actived.png";
+import heartInactive from "/src/assets/icon-heart-no-actived.png";
+
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 console.log(backendUrl);
 
@@ -226,8 +229,8 @@ function Onemanga() {
                       <img
                         src={
                           favorites.includes(critic._id)
-                            ? "/src/assets/icon-heart-actived.png"
-                            : "/src/assets/icon-heart-no-actived.png"
+                            ? heartActive
+                            : heartInactive
                         }
                         alt="Favorite"
                         style={{ width: "20px", height: "20px" }}
